@@ -13,8 +13,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "bullmq": "^5.8.2",
     "@google-cloud/local-auth": "^3.0.1",
+    "@google/generative-ai": "^0.13.0",
     "googleapis": "^140.0.0"
   }
 }
