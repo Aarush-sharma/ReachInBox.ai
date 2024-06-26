@@ -13,6 +13,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "redis": "^4.6.14"
+    "bullmq": "^5.8.2",
+    "@google-cloud/local-auth": "^3.0.1",
+    "googleapis": "^140.0.0"
   }
 }
