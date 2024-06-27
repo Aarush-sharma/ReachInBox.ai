@@ -1,11 +1,11 @@
-// import { Queue, Worker } from "bullmq";
+
 import * as fs from 'fs/promises';
 import * as path from 'path';
 import * as process from 'process';
 import { authenticate } from '@google-cloud/local-auth';
 import { google } from 'googleapis';
 
-// const que = new Queue("email-queue")
+
 interface OAuth2Client {
     credentials: {
         refresh_token: string;
@@ -123,19 +123,3 @@ export async function sendEmail (auth:any,content:string){
   })
   return res.data
 }
-// export const addItem = async (title: string, data: object | string) => {
-//     try {
-//         await que.add(title, data)
-//         return true
-//     } catch (err) {
-//         return false
-//     }
-// }
-
-// export const processItem = () => {
-//     const worker = new Worker("email-queue", async (job) => {
-//         //write process logic here
-//         console.log(job.data)
-//     })
-// }
-
