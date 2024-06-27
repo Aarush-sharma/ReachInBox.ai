@@ -1,4 +1,4 @@
-import { authorize, getMessages } from "@repo/store/index";
+import { authorize, getMessages, sendEmail } from "@repo/store/index";
 import express from "express";
 import cookieParser from "cookie-parser"
 import cors from "cors"
@@ -14,34 +14,14 @@ app.use(
     optionsSuccessStatus: 200,
   })
 );
-
-app.get("/", async (req, res) => {
-
-  const newclient = await authorize()
-  const data = await getMessages(newclient) 
-  console.log(typeof data)
-  res.json({ data });
-
-});
-
-app.post("/", async (req, res) => {
-  const { key, data }: { key: string, data: string } = req.body;
-
-});
-
-const httpServer = app.listen(8081, () => console.log("server running on port 8081..."));
-
-/**
- * 
- * 
- *import {
+import {
   GoogleGenerativeAI,
   HarmCategory,
   HarmBlockThreshold,
   Content,
 } from "@google/generative-ai";
-import {} from "dotenv/config"
-import { NextRequest, NextResponse } from "next/server";
+import { } from "dotenv/config"
+
 
 const apiKey = process.env.GEMINI_API_KEY!;
 const genAI = new GoogleGenerativeAI(apiKey);
@@ -77,9 +57,22 @@ const safetySettings = [
   },
 ];
 
-export async function POST(req:NextRequest) {
-  const {prompt,history}:{prompt:string,history:Content[]} = await req.json()
-  console.log(prompt,history)
+
+
+
+app.get("/", async (req, res) => {
+  const { mailno } = req.query as any
+  const newclient = await authorize()
+  const data = await getMessages(newclient, mailno)
+  console.log(data)
+  res.json({ data });
+
+});
+
+app.post("/", async (req, res) => {
+  const { prompt, history }: { prompt: string, history: Content[] } = req.body
+
+  console.log(prompt, history)
   const chatSession = model.startChat({
     generationConfig,
     safetySettings,
@@ -88,8 +81,19 @@ export async function POST(req:NextRequest) {
 
   const result = await chatSession.sendMessage(prompt);
   console.log(result.response.text())
-  return NextResponse.json(result.response.text());
-}
+  return res.json(result.response.text());
+});
+app.post("/send", async (req, res) => {
+  const client = await authorize()
+  const { data, to, subject } = req.body
+  
+  const message = `TO:${to}\n
+  Subject:${subject}\n
+  Content-Type: text/html; charset=utf-8\n\n
+  ${data}`
 
+  const response = await sendEmail(client, message)
+  res.send(response)
+})
+const httpServer = app.listen(8081, () => console.log("server running on port 8081..."));
 
- */

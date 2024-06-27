@@ -20,8 +20,8 @@ interface messageData {
 interface responseJson {
     data: {
         payload: {
-            body:{
-                data:string;
+            body: {
+                data: string;
             }
             parts: {
                 body: {
@@ -76,28 +76,53 @@ export async function authorize() {
     return client;
 }
 
-export async function getMessages(auth: any):Promise<string | undefined> {
-    const gmail = google.gmail({ version: 'v1', auth: auth });
-    const res = await gmail.users.messages.list({
+export async function getMessages(auth: any, numberofmails?: number): Promise<string[]> {
+    try {
+      const gmail = google.gmail({ version: 'v1', auth });
+  
+      const res = await gmail.users.messages.list({
         userId: 'me',
-        maxResults: 1
-    });
-    const data = res.data as messageData;
-    if (!data.messages) {
+        maxResults: numberofmails || 10,
+      });
+  
+      const data = res.data as messageData;
+  
+      if (!data.messages || data.messages.length === 0) {
         console.log('No messages found.');
-        return;
+        throw new Error('No messages found');
+      }
+  
+      const messageBodies: string[] = [];
+  
+      for (const message of data.messages) {
+        const response = await gmail.users.messages.get({
+          userId: 'me',
+          id: message.id,
+        });
+  
+        const body = response.data.payload?.parts?.[0]?.body?.data || '';
+        const messageBody = Buffer.from(body, 'base64').toString('utf-8');
+  
+        messageBodies.push(messageBody);
+      }
+      console.log("heres the array",messageBodies)
+      return messageBodies;
+    } catch (error) {
+      console.error('Error in getMessages:', error);
+      throw error; // Re-throw the error to be handled by the caller
     }
-    data.messages.forEach(async (val) => {
-        const res = await gmail.users.messages.get({
-            userId: "me",
-            id: val.id
-        }) as responseJson
-        const body = JSON.stringify(res.data.payload.parts[0]?.body?.data)     
-        const messageBody  = Buffer.from(body,"base64").toString()
-        return messageBody;
-    })
 }
-
+export async function sendEmail (auth:any,content:string){
+    const gmail = google.gmail({ version: 'v1', auth });
+  const encodedMessage =  Buffer.from(content).toString("base64").replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
+  const res = await gmail.users.messages.send({
+    userId:"me",
+    requestBody:{
+        raw:encodedMessage
+    }
+  })
+  return res.data
+}
 // export const addItem = async (title: string, data: object | string) => {
 //     try {
 //         await que.add(title, data)
