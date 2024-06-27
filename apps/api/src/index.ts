@@ -83,6 +83,7 @@ app.post("/", async (req, res) => {
   console.log(result.response.text())
   return res.json(result.response.text());
 });
+
 app.post("/send", async (req, res) => {
   const client = await authorize()
   const { data, to, subject } = req.body

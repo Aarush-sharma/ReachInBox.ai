@@ -24,22 +24,20 @@ export default function DataTable(props: data) {
   const [Airesponse, setAIresponse] = useState("");
   const [history, setHistory] = useState<content[]>([]);
   const createChatResponse = async () => {
-    const userMessage = { role: "user", parts: [{ text: data }] };
+
     setmail(true);
-    setHistory([prequisiteUserData, prequisiteModelData, ...history]);
+    history.push(prequisiteUserData, prequisiteModelData);
 
     try {
       console.log(history);
       const response = await axios.post("http://localhost:8081/", {
-        prompt: data,
+        prompt: props.data,
         history: history,
       });
       const modelValue = clearSymbols(response.data);
-      const modelMessage = { role: "model", parts: [{ text: modelValue }] };
-
+    
       setAIresponse(modelValue);
-      setHistory([...history, userMessage, modelMessage]);
-      console.log(history);
+      console.log(data);
     } catch (error) {
       console.error("Error:", error);
     }
