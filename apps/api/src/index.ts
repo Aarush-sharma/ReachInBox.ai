@@ -20,7 +20,7 @@ import {
   HarmBlockThreshold,
   Content,
 } from "@google/generative-ai";
-import { } from "dotenv/config"
+import {} from "dotenv/config"
 
 
 const apiKey = process.env.GEMINI_API_KEY!;

@@ -37,5 +37,6 @@ yarn-error.log*
 .DS_Store
 *.pem
 
-
+credentials.json
+token.json
 workflow.md
