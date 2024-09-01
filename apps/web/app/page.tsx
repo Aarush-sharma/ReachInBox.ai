@@ -3,6 +3,7 @@
 import axios from "axios";
 import DataTable from "../components/mail";
 import { Dispatch, SetStateAction, useState } from "react";
+import { BackgroundGradientAnimation } from "@/components/bg";
 
 interface messageresponse {
   data: string[];
@@ -66,6 +67,7 @@ function App() {
     setisfetched(true);
   };
   return (
+    <BackgroundGradientAnimation >
     <>
       {isfetched && (
         <div>
@@ -103,6 +105,8 @@ function App() {
         </div>
       )}
     </>
+    </BackgroundGradientAnimation
+    >
   );
 }
 

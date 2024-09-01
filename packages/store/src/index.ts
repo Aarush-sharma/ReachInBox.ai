@@ -17,20 +17,6 @@ interface messageData {
         threadId: string
     }[]
 }
-interface responseJson {
-    data: {
-        payload: {
-            body: {
-                data: string;
-            }
-            parts: {
-                body: {
-                    data: string;
-                }
-            }[]
-        }
-    }
-}
 
 const SCOPES = ['https://www.googleapis.com/auth/gmail.readonly', "https://www.googleapis.com/auth/gmail.send"];
 
